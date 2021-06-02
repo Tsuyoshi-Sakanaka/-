@@ -8,40 +8,39 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Scanner;
 
-public class Portfolio3_waterFlow extends Frame implements Runnable
+public class Portfolio1_parallelRays extends Frame implements Runnable
 {
 	static String flowStr = null;												//矢印の指定方向（インプット用）
 	static String flowStrFull = null;										//矢印の指定方向（データベース登録用）
 	static int flowInt = -1;													//矢印の指定方向（制御用）
 	static int speed = 0;														//矢印のスピード
 	static int reflector = 0;												//反射板のサイズ
-	static int interference = 2;												//矢印同士の干渉のしやすさ
 	static String result = null;												//集計結果
 	boolean finish = false;													//集計結果をウィンドウに表示するスイッチ
 	
-	double[][]positionX = new double[35][17];									//矢印の位置（X座標）
-	double[][]positionY = new double[35][17];									//矢印の位置（Y座標）
-	int[][]direction = new int[35][17];										//矢印の現在方向
-	String[][] str = new String[35][17];										//矢印の現在方向による形状
+	int[][]positionX = new int[30][25];										//矢印の位置（X座標）
+	int[][]positionY = new int[30][25];										//矢印の位置（Y座標）
+	int[][]direction = new int[30][25];										//矢印の現在方向
+	String[][] str = new String[30][25];										//矢印の現在方向による形状
 	
 	public static void main(String[] args) 
 	{
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("方向を入力して下さい。\n左：「l」\n右：「r」");
-		while(flowInt<0 || flowInt>360) {
+		System.out.println("方向を入力して下さい。\n上：「u」\n左：「l」\n右：「r」\n下：「d」");
+		while(flowInt<0 || flowInt>3) {
 			flowStr = scanner.next();											//矢印の初期方向をインプット
 			if(flowStr.equals("r")==true) {
 				flowInt = 0;
 				flowStrFull = "right";
-			}else if(flowStr.equals("d")==true) {
-				flowInt = 90;
-				flowStrFull = "down";
 			}else if(flowStr.equals("l")==true) {
-				flowInt = 180;
+				flowInt = 1;
 				flowStrFull = "left";
 			}else if(flowStr.equals("u")==true) {
-				flowInt = 270;
+				flowInt = 2;
 				flowStrFull = "up";
+			}else if(flowStr.equals("d")==true) {
+				flowInt = 3;
+				flowStrFull = "down";
 			}else {
 				System.out.println("方向の指定が誤っています。もう一度入力してください"
 						+ "\n（半角で入力する必要があります）。");
@@ -53,43 +52,43 @@ public class Portfolio3_waterFlow extends Frame implements Runnable
 		reflector = scanner.nextInt();											//反射板の大きさをインプット
 		scanner.close();														//システムリソースの解放
 		@SuppressWarnings("unused")
-		Portfolio3_waterFlow sm = new Portfolio3_waterFlow();							//直後のメソッドでインスタンスを宣言・生成
+		Portfolio1_parallelRays sm = new Portfolio1_parallelRays();						//直後のメソッドでインスタンスを宣言・生成
 	}
 	
-	public Portfolio3_waterFlow() {
+	public Portfolio1_parallelRays() {
 		super("ポートフォリオ用");
 		if(flowInt == 0) {														//矢印の指定方向が0（右）の場合の矢印の初期位置・方向を設定
-			for(int k=0; k<35; k++) {
-				for(int m=0; m<17; m++) {
+			for(int k=0; k<30; k++) {
+				for(int m=0; m<25; m++) {
 					positionX[k][m] = 50;
-					positionY[k][m] = 150+10*m;
+					positionY[k][m] = 100+10*m;
 					direction[k][m] = 0;
 				}
 			}
-		}else if (flowInt == 90) {											//矢印の指定方向が90（下）の場合の矢印の初期位置・方向を設定
-			for(int k=0; k<35; k++) {
-				for(int m=0; m<17; m++) {
-					positionX[k][m] = 150+10*m;
-					positionY[k][m] = 100;
-					direction[k][m] = 90;
+		}else if (flowInt == 1) {												//矢印の指定方向が1（左）の場合の矢印の初期位置・方向を設定
+			for(int k=0; k<30; k++) {
+				for(int m=0; m<25; m++) {
+					positionX[k][m] = 550;
+					positionY[k][m] = 100+10*m;
+					direction[k][m] = 1;
 				}
 			}
-		}else if (flowInt == 180) {											//矢印の指定方向が180（左）の場合の矢印の初期位置・方向を設定
-			for(int k=0; k<35; k++) {
-				for(int m=0; m<17; m++) {
-					positionX[k][m] = 650;
-					positionY[k][m] = 150+10*m;
-					direction[k][m] = 180;
-				}
-			}
-		}else if (flowInt == 270) {											//矢印の指定方向が270（上）の場合の矢印の初期位置・方向を設定
-			for(int k=0; k<35; k++) {
-				for(int m=0; m<17; m++) {
+		}else if (flowInt == 2) {												//矢印の指定方向が2（上）の場合の矢印の初期位置・方向を設定
+			for(int k=0; k<30; k++) {
+				for(int m=0; m<25; m++) {
 					positionX[k][m] = 150+10*m;
 					positionY[k][m] = 360;
-					direction[k][m] = 270;
+					direction[k][m] = 2;
 				}
 			}	
+		}else if (flowInt == 3) {												//矢印の指定方向が3（下）の場合の矢印の初期位置・方向を設定
+			for(int k=0; k<30; k++) {
+				for(int m=0; m<25; m++) {
+					positionX[k][m] = 150+10*m;
+					positionY[k][m] = 100;
+					direction[k][m] = 3;
+				}
+			}
 		}
 		
 		addWindowListener(new SampleWindowListener());							//ウィンドウを生成
@@ -107,119 +106,102 @@ public class Portfolio3_waterFlow extends Frame implements Runnable
 		System.out.println("集計します。");	
 		int rightQuantity=0;													//スレッド終了時の右方向の矢印の数
 		int leftQuantity=0;													//スレッド終了時の左方向の矢印の数
-		int visibleQuantity=0;												//スレッド終了時の見えている矢印の数
-		for(int k=0; k<35; k++) {
-			for(int m=0; m<17; m++) {
-				if(positionX[k][m]<=5){															//スレッド終了時の左端に到達した矢印の数をカウント
-					leftQuantity++;
-				}else if(positionX[k][m]>=695){												//スレッド終了時の右端に到達した矢印の数をカウント
+		int upQuantity=0;														//スレッド終了時の上方向の矢印の数
+		int downQuantity=0;													//スレッド終了時の下方向の矢印の数
+		for(int k=0; k<30; k++) {
+			for(int m=0; m<25; m++) {
+				if(direction[k][m]==0){											//スレッド終了時の右方向の矢印の数をカウント
 					rightQuantity++;
-				}else{																			//スレッド終了時の見えている矢印の数をカウント
-					visibleQuantity++;
+				}else if(direction[k][m]==1){									//スレッド終了時の左方向の矢印の数をカウント
+					leftQuantity++;
+				}else if(direction[k][m]==2) {									//スレッド終了時の上方向の矢印の数をカウント
+					upQuantity++;
+				}else if(direction[k][m]==3) {									//スレッド終了時の下方向の矢印の数をカウント
+					downQuantity++;
 				}
 			}
 		}
-		result = "左に到達した矢印は"+leftQuantity+"個、\n右に到達した矢印は"
-		+rightQuantity+"個、\nウィンドウに見えている矢印は"+visibleQuantity+"個です。";			//集計結果（矢印の数）を文章化
-		finish = true;																			//集計結果をウィンドウに表示するスイッチをオン
-		System.out.println(result);															//集計結果（矢印の数）をコンソールに表示
+		result = "上方向は"+upQuantity+"個、\n左方向は"+leftQuantity+"個、\n右方向は"
+		+rightQuantity+"個、\n下方向は"+downQuantity+"個です。";				//集計結果（矢印の数）を文章化
+		finish = true;															//集計結果をウィンドウに表示するスイッチをオン
+		System.out.println(result);											//集計結果（矢印の数）をコンソールに表示
 		ConnectMariaDB.connectMariaDB(flowStrFull,reflector,leftQuantity,
-				visibleQuantity,rightQuantity);													//集計結果をデータベースに入力
+				upQuantity,downQuantity,rightQuantity);							//集計結果をデータベースに入力
 	}
 	
 	public void run() {
 		try{
-			int time=0;																		//シミュレート開始からの経過時間
-			while(time<2000) {	
-				for(int k=0; k<35; k++) {
-					if(time>=k*40){								//時間が40カウントされるごとに次の17個の矢印がスタート（これを35回繰り返す）
-						for(int m=0; m<17; m++) {
-							for(int n=0; n<35; n++) {
-								for(int p=0; p<17; p++) {
-									if(Math.abs(positionX[k][m]-positionX[n][p])<interference
-											&& Math.abs(positionY[k][m]-positionY[n][p])<interference
-											&& k!=n
-											&& m!=p) {
-										int temporaryDkm = 0;
-										int temporaryDnp = 0;
-										temporaryDkm=direction[n][p];
-										temporaryDnp=direction[k][m];
-										direction[k][m]=temporaryDkm;
-										direction[n][p]=temporaryDnp;
-										positionX[k][m]+=Math.cos(Math.toRadians(direction[k][m]));
-										positionY[k][m]+=Math.sin(Math.toRadians(direction[k][m]));
-										positionX[n][p]+=Math.cos(Math.toRadians(direction[n][p]));
-										positionY[n][p]+=Math.sin(Math.toRadians(direction[n][p]));
-									}
-								}
-							}
-							direction[k][m]=direction[k][m]%360;
-							if(Math.abs(positionY[k][m]-230 - (1*(positionX[k][m]-330))) < 5
-								&& positionY[k][m]>=230-reflector/2
-								&& positionY[k][m]<=230){
-								if(flowInt == 0
-										&& (direction[k][m]>=(-135) && direction[k][m]<45)
-										|| (direction[k][m]>=225 && direction[k][m]<360)
-										|| (direction[k][m]>=(-360) && direction[k][m]<(-315))){
-									direction[k][m]=45*2-direction[k][m];
-								}else if(flowInt == 180){
-									direction[k][m]=45*2-direction[k][m];
-								}
-								positionX[k][m]+=Math.cos(Math.toRadians(direction[k][m]));
-								positionY[k][m]+=Math.sin(Math.toRadians(direction[k][m]));
-							}else if(Math.abs(positionY[k][m]-230 - (-1*(positionX[k][m]-330))) < 5
-								&& positionY[k][m]<=230+reflector/2
-								&& positionY[k][m]>=230	) {
-								if(flowInt == 0
-										&& (direction[k][m]>=(-45) && direction[k][m]<135)
-										|| (direction[k][m]>=(-360) && direction[k][m]<(-225))
-										|| (direction[k][m]>=315 && direction[k][m]<360)){
-									direction[k][m]=315*2-direction[k][m];
-								}else if(flowInt == 180) {
-									direction[k][m]=315*2-direction[k][m];
-								}
-								positionX[k][m]+=Math.cos(Math.toRadians(direction[k][m]));
-								positionY[k][m]+=Math.sin(Math.toRadians(direction[k][m]));
-							}else if(Math.abs(positionY[k][m] - 130) < 5) {
-								if((direction[k][m]>=180 && direction[k][m]<360)
-										|| (direction[k][m]>=(-180) && direction[k][m]<0)){
-									direction[k][m]=-direction[k][m];
-								}
-								positionX[k][m]+=Math.cos(Math.toRadians(direction[k][m]));
-								positionY[k][m]+=Math.sin(Math.toRadians(direction[k][m]));
-							}else if(Math.abs(positionY[k][m] - 330) < 5) {
-								if((direction[k][m]>=0 && direction[k][m]<180)
-										|| (direction[k][m]>=(-360) && direction[k][m]<(-180))){
-									direction[k][m]=-direction[k][m];
-								}
-								positionX[k][m]+=Math.cos(Math.toRadians(direction[k][m]));
-								positionY[k][m]+=Math.sin(Math.toRadians(direction[k][m]));
-							}else {
-							positionX[k][m]+=Math.cos(Math.toRadians(direction[k][m]));
-							positionY[k][m]+=Math.sin(Math.toRadians(direction[k][m]));
-							}
-							direction[k][m]=direction[k][m]%360;
-							if(flowInt == 0) {
-								if(direction[k][m]>=(-180) && direction[k][m]<0){
-									direction[k][m]=direction[k][m]+1;
-								}else if(direction[k][m]>=0 && direction[k][m]<180){
-									direction[k][m]=direction[k][m]-1;
-								}else if(direction[k][m]>=(-360) && direction[k][m]<(-180)){
-									direction[k][m]=direction[k][m]-1;
-								}else if(direction[k][m]>=180 && direction[k][m]<360){
-									direction[k][m]=direction[k][m]+1;
-								}
-							}
-							else if(flowInt == 180){
-								if(direction[k][m]>=0 && direction[k][m]>=0 && direction[k][m]<180){
-									direction[k][m]=direction[k][m]+1;
-								}else if(direction[k][m]>=0 && direction[k][m]>=180 && direction[k][m]<360){
-									direction[k][m]=direction[k][m]-1;
-								}else if(direction[k][m]<=0 && direction[k][m]>=(-180) && direction[k][m]<0){
-									direction[k][m]=direction[k][m]-1;
-								}else if(direction[k][m]<=0 && direction[k][m]>=(-360) && direction[k][m]<(-180)){
-									direction[k][m]=direction[k][m]+1;
-								}
+			int time=0;														//シミュレート開始からの経過時間
+			while(time<1800) {	
+				for(int k=0; k<30; k++) {
+					if(time>=k*40){								//時間が40カウントされるごとに次の25個の矢印がスタート（これを30回繰り返す）
+						for(int m=0; m<25; m++) {
+							if (direction[k][m]==0 && positionX[k][m]-positionY[k][m]!=100 
+									&& positionX[k][m]+positionY[k][m]!=560  
+									&& positionY[k][m]>=230-reflector/2 && positionY[k][m]<=230+reflector/2){
+								positionX[k][m]+=1;
+							}else if(direction[k][m]==0 && positionX[k][m]-positionY[k][m]==100 && positionY[k][m]>=230-reflector/2
+									&& positionY[k][m]<230){
+								direction[k][m]=3;
+								positionY[k][m]+=1;
+							}else if(direction[k][m]==0 && positionX[k][m]+positionY[k][m]==560 && positionY[k][m]>230
+									&& positionY[k][m]<=230+reflector/2){
+								direction[k][m]=2;
+								positionY[k][m]-=1;
+							}else if(direction[k][m]==0 && positionX[k][m]-positionY[k][m]==100 && positionX[k][m]+positionY[k][m]==560){
+								direction[k][m]=1;
+								positionX[k][m]-=1;
+							}else if (direction[k][m]==1 && positionX[k][m]-positionY[k][m]!=100 
+									&& positionX[k][m]+positionY[k][m]!=560
+									&& positionY[k][m]>=230-reflector/2 && positionY[k][m]<=230+reflector/2){
+								positionX[k][m]-=1;
+							}else if(direction[k][m]==1 && positionX[k][m]-positionY[k][m]==100 && positionY[k][m]>=230-reflector/2
+									&& positionY[k][m]<230){
+								direction[k][m]=2;
+								positionY[k][m]-=1;
+							}else if(direction[k][m]==1 && positionX[k][m]+positionY[k][m]==560 && positionY[k][m]>230
+									&& positionY[k][m]<=230+reflector/2){
+								direction[k][m]=3;
+								positionY[k][m]+=1;
+							}else if(direction[k][m]==1 && positionX[k][m]-positionY[k][m]==100 && positionX[k][m]+positionY[k][m]==560){
+								direction[k][m]=0;
+								positionX[k][m]+=1;
+							}else if(direction[k][m]==2 && positionX[k][m]-positionY[k][m]!=100 
+									&& positionX[k][m]+positionY[k][m]!=560 && positionX[k][m]>=330-reflector/2 && positionX[k][m]<=330){
+								positionY[k][m]-=1;
+							}else if(direction[k][m]==2 && positionX[k][m]-positionY[k][m]==100 && positionX[k][m]+positionY[k][m]==560){
+								positionX[k][m]+=1;
+								direction[k][m]=0;
+							}else if(direction[k][m]==2 && positionX[k][m]-positionY[k][m]==100 && positionX[k][m]>=330-reflector/2
+									&& positionX[k][m]<=330){
+								positionX[k][m]-=1;
+								direction[k][m]=1;
+							}else if(direction[k][m]==2 && positionX[k][m]+positionY[k][m]==560 && positionX[k][m]>=330-reflector/2
+									&& positionX[k][m]<=330){
+								positionX[k][m]+=1;
+								direction[k][m]=0;
+							}else if(direction[k][m]==3 && positionX[k][m]-positionY[k][m]==100 && positionX[k][m]+positionY[k][m]==560){
+								positionX[k][m]+=1;
+								direction[k][m]=0;
+							}else if(direction[k][m]==3 && positionX[k][m]-positionY[k][m]!=100 
+									&& positionX[k][m]+positionY[k][m]!=560 && positionX[k][m]>=330-reflector/2 && positionX[k][m]<=325){
+								positionY[k][m]+=1;
+							}else if(direction[k][m]==3 && positionX[k][m]-positionY[k][m]==100 && positionX[k][m]>=330-reflector/2
+									&& positionX[k][m]<=330){
+								positionX[k][m]+=1;
+								direction[k][m]=0;
+							}else if(direction[k][m]==3 && positionX[k][m]+positionY[k][m]==560 && positionX[k][m]>=330-reflector/2
+									&& positionX[k][m]<=330){
+								positionX[k][m]-=1;
+								direction[k][m]=1;
+							}else if(direction[k][m]==0){
+								positionX[k][m]+=1;
+							}else if(direction[k][m]==1){
+								positionX[k][m]-=1;
+							}else if(direction[k][m]==2){
+								positionY[k][m]-=1;
+							}else if(direction[k][m]==3){
+								positionY[k][m]+=1;
 							}
 						}
 					}
@@ -234,16 +216,16 @@ public class Portfolio3_waterFlow extends Frame implements Runnable
 	
 	public void paint(Graphics g) 
 	{
-		for(int k=0; k<35; k++) {								//多次元配列strに矢印の形状を代入
-			for(int m=0; m<17; m++) {
-				if(direction[k][m]%360>=90 && direction[k][m]%360<270) {
-					str[k][m] = "◂" ;
-				}else if(direction[k][m]%360>=-270 && direction[k][m]%360<-90) {
-					str[k][m] = "◂" ;
-				}else if(direction[k][m]%360>=270 || direction[k][m]%360<90) {
-					str[k][m] = "▸" ;
-				}else if(direction[k][m]%360>=-90 || direction[k][m]%360<-270) {
-					str[k][m] = "▸" ;
+		for(int k=0; k<30; k++) {								//多次元配列strに矢印の形状を代入
+			for(int m=0; m<25; m++) {
+				if(direction[k][m] == 0) {
+					str[k][m] = "▶" ;
+				}else if(direction[k][m] == 1) {
+					str[k][m] = "◀" ;
+				}else if(direction[k][m] == 2) {
+					str[k][m] = "▴" ;
+				}else {
+					str[k][m] = "▾" ;
 				}
 			}
 		}
@@ -252,27 +234,22 @@ public class Portfolio3_waterFlow extends Frame implements Runnable
 		g.setColor(Color.RED);
 		Font font = new Font("MS Gothic", Font.ROMAN_BASELINE, 12);
 		g.setFont(font);
-		for(int i=0; i<reflector-20; i+=5) {							//反射板の描画
+		for(int i=0; i<reflector-20; i+=5) {									//反射板の描画
 			g.drawString("＼", 325-i/2, 225-i/2);
 			g.drawString("／", 325-i/2, 235+i/2);
 			}
-		for(int i=0; i<700; i+=5) {									//反射板の描画
-			g.drawString("─", i, 130);
-			g.drawString("─", i, 330);
-			}
-		
 		g.setColor(Color.BLUE);
-		for(int k=0; k<35; k++) {
-			for(int m=0; m<17; m++) {
-				g.drawString(str[k][m], (int)positionX[k][m], (int)positionY[k][m]);		//矢印の描画
+		for(int k=0; k<30; k++) {
+			for(int m=0; m<25; m++) {
+				g.drawString(str[k][m], positionX[k][m], positionY[k][m]);		//矢印の描画
 			}
 		}
 		if(finish == true) {										//スレッド終了時、集計結果の描画を実行
-			Font fg = new Font("SansSerif" , Font.PLAIN , 15);
+			Font fg = new Font("SansSerif" , Font.PLAIN , 20);
 			g.setFont(fg);
 			g.setColor(Color.BLACK);
-			g.drawString("集計します。",35,75);
-			g.drawString(result,35,100);
+			g.drawString("集計します。",55,70);
+			g.drawString(result,55,100);
 		}
 	}
 	
