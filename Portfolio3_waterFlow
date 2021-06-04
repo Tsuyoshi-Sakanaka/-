@@ -256,7 +256,7 @@ public class Portfolio3_waterFlow extends Frame implements Runnable
 			g.drawString("＼", 325-i/2, 225-i/2);
 			g.drawString("／", 325-i/2, 235+i/2);
 			}
-		for(int i=0; i<700; i+=5) {								//反射板の描画
+		for(int i=0; i<700; i+=5) {								//水流を整える壁の描画
 			g.drawString("─", i, 130);
 			g.drawString("─", i, 330);
 			}
