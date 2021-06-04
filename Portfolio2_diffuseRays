@@ -10,25 +10,25 @@ import java.util.Scanner;
 
 public class Portfolio2_diffuseRays extends Frame implements Runnable
 {
-	static String flowStr = null;												//矢印の指定方向（インプット用）
-	static String flowStrFull = null;										//矢印の指定方向（データベース登録用）
-	static int flowInt = -1;													//矢印の指定方向（制御用）
-	static int speed = 0;														//矢印のスピード
-	static int reflector = 0;												//反射板のサイズ
-	static String result = null;												//集計結果
-	boolean finish = false;													//集計結果をウィンドウに表示するスイッチ
+	static String flowStr = null;										//矢印の指定方向（インプット用）
+	static String flowStrFull = null;									//矢印の指定方向（データベース登録用）
+	static int flowInt = -1;										//矢印の指定方向（制御用）
+	static int speed = 0;											//矢印のスピード
+	static int reflector = 0;										//反射板のサイズ
+	static String result = null;										//集計結果
+	boolean finish = false;											//集計結果をウィンドウに表示するスイッチ
 	
-	double[][]positionX = new double[30][17];									//矢印の位置（X座標）
-	double[][]positionY = new double[30][17];									//矢印の位置（Y座標）
-	int[][]direction = new int[30][17];										//矢印の現在方向
-	String[][] str = new String[30][17];										//矢印の現在方向による形状
+	double[][]positionX = new double[30][17];								//矢印の位置（X座標）
+	double[][]positionY = new double[30][17];								//矢印の位置（Y座標）
+	int[][]direction = new int[30][17];									//矢印の現在方向
+	String[][] str = new String[30][17];									//矢印の現在方向による形状
 	
 	public static void main(String[] args) 
 	{
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("方向を入力して下さい。\n上：「u」\n左：「l」\n右：「r」\n下：「d」");
 		while(flowInt<0 || flowInt>360) {
-			flowStr = scanner.next();											//矢印の初期方向をインプット
+			flowStr = scanner.next();								//矢印の初期方向をインプット
 			if(flowStr.equals("r")==true) {
 				flowInt = 0;
 				flowStrFull = "right";
@@ -47,17 +47,17 @@ public class Portfolio2_diffuseRays extends Frame implements Runnable
 			}
 		}
 		System.out.println("スピードを入力して下さい。\n（整数1～10）");
-		speed = scanner.nextInt();												//矢印のスピードをインプット
+		speed = scanner.nextInt();									//矢印のスピードをインプット
 		System.out.println("反射板の大きさを入力してください。\n（整数0～300）");
-		reflector = scanner.nextInt();											//反射板の大きさをインプット
-		scanner.close();														//システムリソースの解放
+		reflector = scanner.nextInt();									//反射板の大きさをインプット
+		scanner.close();										//システムリソースの解放
 		@SuppressWarnings("unused")
-		Portfolio2_diffuseRays sm = new Portfolio2_diffuseRays();							//直後のメソッドでインスタンスを宣言・生成
+		Portfolio2_diffuseRays sm = new Portfolio2_diffuseRays();					//直後のメソッドでインスタンスを宣言・生成
 	}
 	
 	public Portfolio2_diffuseRays() {
 		super("ポートフォリオ用");
-		if(flowInt == 0) {														//矢印の指定方向が0（右）の場合の矢印の初期位置・方向を設定
+		if(flowInt == 0) {										//矢印の指定方向が0（右）の場合の矢印の初期位置・方向を設定
 			for(int k=0; k<30; k++) {
 				for(int m=0; m<17; m++) {
 					positionX[k][m] = 50;
@@ -65,7 +65,7 @@ public class Portfolio2_diffuseRays extends Frame implements Runnable
 					direction[k][m] = 315+5+5*m;
 				}
 			}
-		}else if (flowInt == 90) {											//矢印の指定方向が90（下）の場合の矢印の初期位置・方向を設定
+		}else if (flowInt == 90) {									//矢印の指定方向が90（下）の場合の矢印の初期位置・方向を設定
 			for(int k=0; k<30; k++) {
 				for(int m=0; m<17; m++) {
 					positionX[k][m] = 375;
@@ -73,7 +73,7 @@ public class Portfolio2_diffuseRays extends Frame implements Runnable
 					direction[k][m] = 45+5+5*m;
 				}
 			}
-		}else if (flowInt == 180) {											//矢印の指定方向が180（左）の場合の矢印の初期位置・方向を設定
+		}else if (flowInt == 180) {									//矢印の指定方向が180（左）の場合の矢印の初期位置・方向を設定
 			for(int k=0; k<30; k++) {
 				for(int m=0; m<17; m++) {
 					positionX[k][m] = 550;
@@ -81,7 +81,7 @@ public class Portfolio2_diffuseRays extends Frame implements Runnable
 					direction[k][m] = 135+5+5*m;
 				}
 			}
-		}else if (flowInt == 270) {											//矢印の指定方向が270（上）の場合の矢印の初期位置・方向を設定
+		}else if (flowInt == 270) {									//矢印の指定方向が270（上）の場合の矢印の初期位置・方向を設定
 			for(int k=0; k<30; k++) {
 				for(int m=0; m<17; m++) {
 					positionX[k][m] = 375;
@@ -91,57 +91,57 @@ public class Portfolio2_diffuseRays extends Frame implements Runnable
 			}	
 		}
 		addWindowListener(new SampleWindowListener());							//ウィンドウを生成
-		Thread th;																//Threadクラスでthスレッドを宣言
-		th = new Thread(this);													//同一クラス内にあるため、引数thisでインスタンス生成
-		th.start();																//Threadクラス内のstartメソッドの呼び出し
-		setAlwaysOnTop(true); 													//ウィンドウを最前面に移動
-		setSize(700, 400);														//ウィンドウのサイズを設定
-		setVisible(true);														//ウィンドウを表示
+		Thread th;											//Threadクラスでthスレッドを宣言
+		th = new Thread(this);										//同一クラス内にあるため、引数thisでインスタンス生成
+		th.start();											//Threadクラス内のstartメソッドの呼び出し
+		setAlwaysOnTop(true); 										//ウィンドウを最前面に移動
+		setSize(700, 400);										//ウィンドウのサイズを設定
+		setVisible(true);										//ウィンドウを表示
 		
 		try {
-		th.join();																//スレッドの終了を待機
+		th.join();											//スレッドの終了を待機
 		}catch(InterruptedException e) {
 		}
 		System.out.println("集計します。");	
-		int rightQuantity=0;													//スレッド終了時の右方向の矢印の数
-		int upQuantity=0;														//スレッド終了時の上方向の矢印の数
-		int leftQuantity=0;													//スレッド終了時の左方向の矢印の数
-		int downQuantity=0;													//スレッド終了時の下方向の矢印の数
+		int rightQuantity=0;										//スレッド終了時の右方向の矢印の数
+		int upQuantity=0;										//スレッド終了時の上方向の矢印の数
+		int leftQuantity=0;										//スレッド終了時の左方向の矢印の数
+		int downQuantity=0;										//スレッド終了時の下方向の矢印の数
 		for(int k=0; k<30; k++) {
 			for(int m=0; m<17; m++) {
-				if(direction[k][m]%360>=45 && direction[k][m]%360<135) {								//スレッド終了時の下方向の矢印の数をカウント
+				if(direction[k][m]%360>=45 && direction[k][m]%360<135) {			//スレッド終了時の下方向の矢印の数をカウント
 					downQuantity++;
-				}else if(direction[k][m]%360>=-315 && direction[k][m]%360<-225) {						//スレッド終了時の下方向の矢印の数をカウント
+				}else if(direction[k][m]%360>=-315 && direction[k][m]%360<-225) {		//スレッド終了時の下方向の矢印の数をカウント
 					downQuantity++;
-				}else if(direction[k][m]%360>=135 && direction[k][m]%360<225){							//スレッド終了時の左方向の矢印の数をカウント
+				}else if(direction[k][m]%360>=135 && direction[k][m]%360<225){			//スレッド終了時の左方向の矢印の数をカウント
 					leftQuantity++;
-				}else if(direction[k][m]%360>=-225 && direction[k][m]%360<-135){						//スレッド終了時の左方向の矢印の数をカウント
+				}else if(direction[k][m]%360>=-225 && direction[k][m]%360<-135){		//スレッド終了時の左方向の矢印の数をカウント
 					leftQuantity++;
-				}else if(direction[k][m]%360>=225 && direction[k][m]%360<315) {						//スレッド終了時の上方向の矢印の数をカウント
+				}else if(direction[k][m]%360>=225 && direction[k][m]%360<315) {			//スレッド終了時の上方向の矢印の数をカウント
 					upQuantity++;
-				}else if(direction[k][m]%360>=-135 && direction[k][m]%360<-45) {						//スレッド終了時の上方向の矢印の数をカウント
+				}else if(direction[k][m]%360>=-135 && direction[k][m]%360<-45) {		//スレッド終了時の上方向の矢印の数をカウント
 					upQuantity++;
-				}else if(direction[k][m]%360>=315 || direction[k][m]%360<45){							//スレッド終了時の右方向の矢印の数をカウント
+				}else if(direction[k][m]%360>=315 || direction[k][m]%360<45){			//スレッド終了時の右方向の矢印の数をカウント
 					rightQuantity++;
-				}else if(direction[k][m]%360>=-45 || direction[k][m]%360<-315){						//スレッド終了時の右方向の矢印の数をカウント
+				}else if(direction[k][m]%360>=-45 || direction[k][m]%360<-315){			//スレッド終了時の右方向の矢印の数をカウント
 					rightQuantity++;
 				}
 			}
 		}
 		result = "上方向は"+upQuantity+"個、\n左方向は"+leftQuantity+"個、\n右方向は"
-		+rightQuantity+"個、\n下方向は"+downQuantity+"個です。";				//集計結果（矢印の数）を文章化
-		finish = true;															//集計結果をウィンドウに表示するスイッチをオン
-		System.out.println(result);											//集計結果（矢印の数）をコンソールに表示
+		+rightQuantity+"個、\n下方向は"+downQuantity+"個です。";						//集計結果（矢印の数）を文章化
+		finish = true;											//集計結果をウィンドウに表示するスイッチをオン
+		System.out.println(result);									//集計結果（矢印の数）をコンソールに表示
 		ConnectMariaDB.connectMariaDB(flowStrFull,reflector,leftQuantity,
-				upQuantity,downQuantity,rightQuantity);							//集計結果をデータベースに入力
+				upQuantity,downQuantity,rightQuantity);						//集計結果をデータベースに入力
 	}
 	
 	public void run() {
 		try{
-			int time=0;														//シミュレート開始からの経過時間
+			int time=0;										//シミュレート開始からの経過時間
 			while(time<1800) {	
 				for(int k=0; k<30; k++) {
-					if(time>=k*40){								//時間が40カウントされるごとに次の17個の矢印がスタート（これを30回繰り返す）
+					if(time>=k*40){					//時間が40カウントされるごとに次の17個の矢印がスタート（これを30回繰り返す）
 						for(int m=0; m<17; m++) {
 							if(Math.abs(positionY[k][m]-230 - (1*(positionX[k][m]-330))) < 1
 								&& positionY[k][m]>=230-reflector/2
@@ -157,17 +157,17 @@ public class Portfolio2_diffuseRays extends Frame implements Runnable
 						}
 					}
 				}
-				repaint();										//paintメソッドの呼び出し（経過時間ごとに矢印の描画を実行）
-				Thread.sleep(100/speed);						//（100/speed）ミリ秒待機
+				repaint();									//paintメソッドの呼び出し（経過時間ごとに矢印の描画を実行）
+				Thread.sleep(100/speed);							//（100/speed）ミリ秒待機
 				time++;
 			}
-			repaint();											//paintメソッドの呼び出し（スレッド終了時、集計結果の描画を実行）
+			repaint();										//paintメソッドの呼び出し（スレッド終了時、集計結果の描画を実行）
 		}catch(InterruptedException e) {}
 	}
 	
 	public void paint(Graphics g) 
 	{
-		for(int k=0; k<30; k++) {								//多次元配列strに矢印の形状を代入
+		for(int k=0; k<30; k++) {									//多次元配列strに矢印の形状を代入
 			for(int m=0; m<17; m++) {
 				if(direction[k][m]%360>=45 && direction[k][m]%360<135) {
 					str[k][m] = "↓" ;
@@ -195,7 +195,7 @@ public class Portfolio2_diffuseRays extends Frame implements Runnable
 		g.setColor(Color.RED);
 		Font font = new Font("MS Gothic", Font.ROMAN_BASELINE, 12);
 		g.setFont(font);
-		for(int i=0; i<reflector-20; i+=5) {									//反射板の描画
+		for(int i=0; i<reflector-20; i+=5) {								//反射板の描画
 			g.drawString("＼", 325-i/2, 225-i/2);
 			g.drawString("／", 325-i/2, 235+i/2);
 			}
