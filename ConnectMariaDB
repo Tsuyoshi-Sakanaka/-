@@ -8,37 +8,37 @@ import java.sql.Statement;
 public class ConnectMariaDB {
 	public static void connectMariaDB(String flowStrFull, int reflector, int leftQuantity,
 			int upQuantity, int downQuantity, int rightQuantity)  {
-		Connection cn = null;														//データベースオブジェクト用の変数
+		Connection cn = null;											//データベースオブジェクト用の変数
 		Statement st1 = null;
 		Statement st2 = null;
 		ResultSet rs1 = null;
 		ResultSet rs2 = null;
-		String hostName = "153.127.17.17"; 										//ホスト名（IPアドレス）
-		String dbName = "flow"; 													//データベース名
-		String userName = "outside"; 												//ユーザ名
-		String password = "password"; 												//パスワード
+		String hostName = "153.127.17.17"; 									//ホスト名（IPアドレス）
+		String dbName = "flow"; 										//データベース名
+		String userName = "outside"; 										//ユーザ名
+		String password = "password"; 										//パスワード
 		String url = "jdbc:mysql://" + hostName + "/" + dbName;
 		
 		try {
 			
-			Class.forName("org.mariadb.jdbc.Driver");								//JDBCドライバーをロード
+			Class.forName("org.mariadb.jdbc.Driver");							//JDBCドライバーをロード
 			
-			cn = DriverManager.getConnection(url,userName,password);				//MariaDBへ接続
+			cn = DriverManager.getConnection(url,userName,password);					//MariaDBへ接続
 			
 			System.out.println("接続完了。");
 			System.out.println("----------------------------------------");
 			
 			String sql1 = "INSERT INTO result VALUES('"+flowStrFull+"','"+reflector+"','"+leftQuantity+"','"
-			+upQuantity+"','"+downQuantity+"','"+rightQuantity+"',"+"Now());";		//SQL（データ追加）を作成
-			String sql2 = "SELECT * FROM result;";									//SQL（データ表示）を作成
+			+upQuantity+"','"+downQuantity+"','"+rightQuantity+"',"+"Now());";				//SQL（データ追加）を作成
+			String sql2 = "SELECT * FROM result;";								//SQL（データ表示）を作成
 			
-			st1 = cn.createStatement();												//SQL（データ追加）を実行
+			st1 = cn.createStatement();									//SQL（データ追加）を実行
 			rs1 = st1.executeQuery(sql1);
-			st2 = cn.createStatement();												//SQL（データ表示）を実行
+			st2 = cn.createStatement();									//SQL（データ表示）を実行
 			rs2 = st2.executeQuery(sql2);
 			
 			System.out.println("更新した時刻は以下の通りです。");
-			while(rs2.next()) {														//SQLの実行結果を一行ずつ取得
+			while(rs2.next()) {										//SQLの実行結果を一行ずつ取得
 				
 				String dateTime = rs2.getString("DATETIME");						//実行結果の行からDATETIMEカラムの取り出し
 				System.out.println(dateTime);
@@ -47,7 +47,7 @@ public class ConnectMariaDB {
 		}catch (Exception e) {
 			System.out.println("例外が発生しました。" + e.toString());
 		}finally {
-			try {																	//システムリソースの解放
+			try {												//システムリソースの解放
 				if(rs1 != null) {
 					rs1.close();
 				}
@@ -63,7 +63,7 @@ public class ConnectMariaDB {
 				if(cn != null) {
 					cn.close();
 				}
-			}catch (SQLException e) {												//例外が発生した場合に場所を表示
+			}catch (SQLException e) {									//例外が発生した場合に場所を表示
 				e.printStackTrace();
 			}
 		}
@@ -75,37 +75,37 @@ public class ConnectMariaDB {
 	
 	public static void connectMariaDB(String flowStrFull, int reflector, int leftQuantity,
 			int visibleQuantity, int rightQuantity)  {
-		Connection cn = null;														//データベースオブジェクト用の変数
+		Connection cn = null;											//データベースオブジェクト用の変数
 		Statement st1 = null;
 		Statement st2 = null;
 		ResultSet rs1 = null;
 		ResultSet rs2 = null;
-		String hostName = "153.127.17.17"; 										//ホスト名（IPアドレス）
-		String dbName = "flow"; 													//データベース名
-		String userName = "outside"; 												//ユーザ名
-		String password = "password"; 												//パスワード
+		String hostName = "153.127.17.17"; 									//ホスト名（IPアドレス）
+		String dbName = "flow"; 										//データベース名
+		String userName = "outside"; 										//ユーザ名
+		String password = "password"; 										//パスワード
 		String url = "jdbc:mysql://" + hostName + "/" + dbName;
 		
 		try {
 			
-			Class.forName("org.mariadb.jdbc.Driver");								//JDBCドライバーをロード
+			Class.forName("org.mariadb.jdbc.Driver");							//JDBCドライバーをロード
 			
-			cn = DriverManager.getConnection(url,userName,password);				//MariaDBへ接続
+			cn = DriverManager.getConnection(url,userName,password);					//MariaDBへ接続
 			
 			System.out.println("接続完了。");
 			System.out.println("----------------------------------------");
 			
 			String sql1 = "INSERT INTO resultWater VALUES('"+flowStrFull+"','"+reflector+"','"+leftQuantity+"','"
-			+visibleQuantity+"','"+rightQuantity+"',"+"Now());";					//SQL（データ追加）を作成
-			String sql2 = "SELECT * FROM resultWater;";									//SQL（データ表示）を作成
+			+visibleQuantity+"','"+rightQuantity+"',"+"Now());";						//SQL（データ追加）を作成
+			String sql2 = "SELECT * FROM resultWater;";							//SQL（データ表示）を作成
 			
-			st1 = cn.createStatement();												//SQL（データ追加）を実行
+			st1 = cn.createStatement();									//SQL（データ追加）を実行
 			rs1 = st1.executeQuery(sql1);
-			st2 = cn.createStatement();												//SQL（データ表示）を実行
+			st2 = cn.createStatement();									//SQL（データ表示）を実行
 			rs2 = st2.executeQuery(sql2);
 			
 			System.out.println("更新した時刻は以下の通りです。");
-			while(rs2.next()) {														//SQLの実行結果を一行ずつ取得
+			while(rs2.next()) {										//SQLの実行結果を一行ずつ取得
 				
 				String dateTime = rs2.getString("DATETIME");						//実行結果の行からDATETIMEカラムの取り出し
 				System.out.println(dateTime);
@@ -114,7 +114,7 @@ public class ConnectMariaDB {
 		}catch (Exception e) {
 			System.out.println("例外が発生しました。" + e.toString());
 		}finally {
-			try {																	//システムリソースの解放
+			try {												//システムリソースの解放
 				if(rs1 != null) {
 					rs1.close();
 				}
@@ -130,7 +130,7 @@ public class ConnectMariaDB {
 				if(cn != null) {
 					cn.close();
 				}
-			}catch (SQLException e) {												//例外が発生した場合に場所を表示
+			}catch (SQLException e) {									//例外が発生した場合に場所を表示
 				e.printStackTrace();
 			}
 		}
