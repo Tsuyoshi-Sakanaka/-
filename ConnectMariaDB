@@ -1,3 +1,4 @@
+/*　使用するにはプロジェクトにjarファイルを取り込む必要があります。　*/
 package portfolio;
 import java.sql.Connection;
 import java.sql.DriverManager;
